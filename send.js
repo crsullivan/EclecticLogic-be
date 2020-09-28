@@ -28,13 +28,13 @@ transporter.verify((error, success) => {
 router.post('/', (req, res, next) => {
     console.log(process.env.USER)
     var name = req.body.name
-    var address = req.body.address
     var email = req.body.email
-    var content = `name: ${name} \n address: ${address} \n email: ${email} `
+    var message = req.body.message
+    var content = `name: ${name} \n email: ${email} \n message: ${message} `
   
     var mail = {
       from: name,
-      to: 'eclecticlogic.business@gmail.com',  // Change to email address that you want to receive messages on
+      to: 'eclecticlogic.business@gmail.com',  // Change to message email that you want to receive messages on
       subject: 'New Message from Contact Form',
       text: content
     }
@@ -42,24 +42,24 @@ router.post('/', (req, res, next) => {
     transporter.sendMail(mail, (err, data) => {
         if (err) {
           res.json({
-            status: 'failure sending email'
+            status: 'failure sending message'
           })
         } else {
           res.json({
-           status: 'success, email sent'
+           status: 'success, message sent'
           })
           transporter.sendMail({
             from: "eclecticlogic.business@gmail.com",
-            to: address,
+            to: email,
             subject: "Submission was successful",
-            text: `Thank you for contacting us!\n\nForm details\nName: ${name}\n Email: ${address}\n Message: ${email}`
+            text: `Thank you for contacting us!\n\nForm details\nName: ${name}\n Email: ${email}\n Message: ${message}`
           }, function(error, info){
             if(error) {
               console.log(error);
-              console.log(address, 'but it failed')
+              console.log(email, 'but it failed')
 
             } else{
-                console.log(address);
+                console.log(email);
                 console.log('Message sent: ' + info.response);
             }
           });
